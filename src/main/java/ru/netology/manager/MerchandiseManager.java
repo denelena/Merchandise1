@@ -30,11 +30,6 @@ public class MerchandiseManager {
     public boolean matches(Product product, String search) {
         //I believe we want case-insensitive match
 
-        //match on Price, too! Although doesn't make much sense to match price as "contains", because, for example, $10, $100, $1000 - all contain "1" and "0".
-        // it would be more reasonable to find exact price match
-        if (String.valueOf(product.getPrice()).equals(search))
-            return true;
-
         if (product instanceof Book) {
             Book book = (Book) product;
             if (book.getAuthor().toLowerCase().contains(search.toLowerCase())) {

@@ -153,10 +153,6 @@ public class MerchandiseManagerTest {
         Product[] expected = new Product[]{book02};
         assertArrayEquals(expected, found);
 
-        found = mm.searchBy("19");
-        expected = new Product[]{book01};
-        assertArrayEquals(expected, found);
-
         found = mm.searchBy("Apple");
         expected = new Product[]{phone02};
         assertArrayEquals(expected, found);
