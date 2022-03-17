@@ -22,12 +22,12 @@ public class Repository {
         System.arraycopy(items, 0, temp, 0, items.length);
         return temp;
     }
+
     public void removeItemById(int id) {
         //if product with given id is not found, do nothing with items array.
         //These 2 lines also handle the case if repository is empty.
-        if(!isExisting(id))
+        if (!isExisting(id))
             return;
-
 
         //now we know for sure, that we will modify items array:
         int length = items.length - 1;
@@ -41,9 +41,10 @@ public class Repository {
         }
         items = tmp;
     }
+
     private boolean isExisting(int idToCheck) {
-        for (Product currProduct:items) {
-            if(currProduct.getId() == idToCheck)
+        for (Product currProduct : items) {
+            if (currProduct.getId() == idToCheck)
                 return true;
         }
         return false;

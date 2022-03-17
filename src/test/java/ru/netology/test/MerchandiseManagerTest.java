@@ -62,7 +62,7 @@ public class MerchandiseManagerTest {
     }
 
     @Test
-    public void shouldAddAndRemove() {
+    public void shouldAddAndRemoveOne() {
         repository.add(book01);
         repository.add(book02);
         repository.add(book03);
@@ -71,30 +71,59 @@ public class MerchandiseManagerTest {
         repository.add(phone02);
         repository.add(phone03);
 
-        repository.removeItemById(50); //book04 removed, from the middle
+        repository.removeItemById(50); //book04 removed
         Product[] expected = new Product[]{book01, book02, book03, phone01, phone02, phone03};
         assertArrayEquals(expected, repository.findAll());
+    }
 
+    @Test
+    public void shouldAddAndRemoveSeveral() {
+        repository.add(book01);
+        repository.add(book02);
+        repository.add(book03);
+        repository.add(book04);
+        repository.add(phone01);
+        repository.add(phone02);
+        repository.add(phone03);
+
+        repository.removeItemById(50); //book04 removed
         repository.removeItemById(10); //book01 removed, from the beginning
-        expected = new Product[]{book02, book03, phone01, phone02, phone03};
-        assertArrayEquals(expected, repository.findAll());
-
         repository.removeItemById(3000); //phone03 removed, from the end
-        expected = new Product[]{book02, book03, phone01, phone02};
+
+        Product[] expected = new Product[]{book02, book03, phone01, phone02};
         assertArrayEquals(expected, repository.findAll());
+    }
 
-        repository.removeItemById(5000); //nothing removed, no such id
+    @Test
+    public void shouldAddAndRemoveAll() {
+        repository.add(book01);
+        repository.add(book04);
+        repository.add(phone03);
+
+        repository.removeItemById(50); //book04 removed
+        repository.removeItemById(10); //book01 removed, from the beginning
+        repository.removeItemById(3000); //phone03 removed, from the end
+
+        Product[] expected = new Product[0];
         assertArrayEquals(expected, repository.findAll());
+    }
 
-        repository.removeItemById(2000); //phone02 removed
-        repository.removeItemById(1000); //phone01 removed
-        repository.removeItemById(30); //book03 removed
-        repository.removeItemById(20); //book02 removed, nothing left
+    @Test
+    public void shouldAddAndTryRemoveNonExisting() {
+        repository.add(book01);
+        repository.add(book04);
+        repository.add(phone03);
 
-        expected = new Product[0];
+        repository.removeItemById(512); //no such item
+
+        Product[] expected = new Product[]{book01, book04, phone03};
         assertArrayEquals(expected, repository.findAll());
+    }
 
-        repository.removeItemById(20); // try to remove book02 again, from empty repository :-)
+    @Test
+    public void shouldTryRemoveFromEmpty() {
+        repository.removeItemById(10); //no such item
+        Product[] expected = new Product[0];
         assertArrayEquals(expected, repository.findAll());
     }
 
@@ -116,7 +145,7 @@ public class MerchandiseManagerTest {
     }
 
     @Test
-    public void shouldAddSearchAndFindOneOnTitleOrModel() {
+    public void shouldAddSearchAndFindOneOnTitle() {
         MerchandiseManager mm = new MerchandiseManager(repository);
 
         mm.add(book01);
@@ -137,7 +166,24 @@ public class MerchandiseManagerTest {
     }
 
     @Test
-    public void shouldAddSearchAndFindOneOnAuthorOrPriceOrManufacturer() {
+    public void shouldAddSearchAndFindOneOnModel() {
+        MerchandiseManager mm = new MerchandiseManager(repository);
+
+        mm.add(book01);
+        mm.add(book02);
+        mm.add(book03);
+        mm.add(book04);
+        mm.add(phone01);
+        mm.add(phone02);
+        mm.add(phone03);
+
+        Product[] found = mm.searchBy("iPhone");
+        Product[] expected = new Product[]{phone02};
+        assertArrayEquals(expected, found);
+    }
+
+    @Test
+    public void shouldAddSearchAndFindOneOnAuthor() {
         MerchandiseManager mm = new MerchandiseManager(repository);
 
         mm.add(book01);
@@ -152,11 +198,25 @@ public class MerchandiseManagerTest {
         Product[] found = mm.searchBy("Lewis");
         Product[] expected = new Product[]{book02};
         assertArrayEquals(expected, found);
+    }
 
-        found = mm.searchBy("Apple");
-        expected = new Product[]{phone02};
+    @Test
+    public void shouldAddSearchAndFindOneOnManufacturer() {
+        MerchandiseManager mm = new MerchandiseManager(repository);
+
+        mm.add(book01);
+        mm.add(book02);
+        mm.add(book03);
+        mm.add(book04);
+        mm.add(phone01);
+        mm.add(phone02);
+        mm.add(phone03);
+   
+        Product[] found = mm.searchBy("Apple");
+        Product[] expected = new Product[]{phone02};
         assertArrayEquals(expected, found);
     }
+
 
     @Test
     public void shouldAddSearchAndFindTwo() {
